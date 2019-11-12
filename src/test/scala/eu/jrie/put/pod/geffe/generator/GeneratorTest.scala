@@ -70,6 +70,6 @@ class GeneratorTest extends FunSuite {
       if (t()) return
     })
     val passed = false
-    assert(passed, "should pass test at least once")
+    assert(passed, "should pass the test at least once")
   }
 }
