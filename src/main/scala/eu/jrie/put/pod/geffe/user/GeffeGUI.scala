@@ -1,5 +1,7 @@
 package eu.jrie.put.pod.geffe.user
 
+import java.io.{File, PrintWriter}
+
 import eu.jrie.put.pod.geffe.generator.Generator
 import eu.jrie.put.pod.geffe.registry.{Fibonacci, LFSR, Xor}
 import scalafx.application.JFXApp
@@ -16,9 +18,10 @@ class GeffeGUI extends JFXApp {
   import GeffeGUI.LfsrInput
 
   private val lengthField = new TextField() { onKeyReleased = _ => randomRegistersAction() }
-  private val randomRegistersCheckbox =  new CheckBox("random registers")
+  private val randomRegistersCheckbox = new CheckBox("random registers")
   private val lfsrInputs = (new LfsrInput(1), new LfsrInput(2), new LfsrInput(3))
   private val generateButton = new Button("Generate") { onAction = _ => generateAction() }
+  private val generateToFileCheckbox = new CheckBox("to file")
   private val resultArea = new TextArea() { editable = false; wrapText = true }
 
   stage = new PrimaryStage {
@@ -33,7 +36,9 @@ class GeffeGUI extends JFXApp {
             randomRegistersCheckbox
           ),
           lfsrInputs._1, lfsrInputs._2, lfsrInputs._3,
-          generateButton,
+          new HBox(
+            generateButton, generateToFileCheckbox
+          ),
           resultArea
         )
       }
@@ -50,13 +55,34 @@ class GeffeGUI extends JFXApp {
 
   private def generateAction(): Unit = {
     resultArea.clear()
-    new Generator(
-      lengthField.getText.toInt,
-      lfsrInputs._1.registry, lfsrInputs._2.registry, lfsrInputs._3.registry
-    ).get()
-      .map(b => if(b) 1 else 0) foreach { b => resultArea.appendText(b.toString) }
+    printStream(
+      new Generator(
+        lengthField.getText.toInt,
+        lfsrInputs._1.registry, lfsrInputs._2.registry, lfsrInputs._3.registry
+      ).get()
+    )
   }
 
+  private val printToResultsArea = (stream: LazyList[Boolean]) => {
+    stream
+      .map(b => if(b) "1" else "0")
+      .foreach(resultArea.appendText)
+  }
+  private val printToFile = (stream: LazyList[Boolean]) => {
+    val file = new File(s"${System.getProperty("user.dir")}/stream")
+    if (file.exists()) file.delete()
+    val writer = new PrintWriter(file)
+    stream
+      .map(b => if(b) '1' else '0')
+      .sliding(1024, 1024)
+      .foreach(chunk => {
+        chunk foreach { b => writer.append(b) }
+        writer.flush()
+      })
+  }
+
+  private def printStream(stream: LazyList[Boolean]): Unit = if (generateToFileCheckbox.isSelected) printToFile(stream)
+  else printToResultsArea(stream)
 }
 
 object GeffeGUI {
