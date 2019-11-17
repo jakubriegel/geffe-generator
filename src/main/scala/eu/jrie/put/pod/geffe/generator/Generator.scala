@@ -20,13 +20,14 @@ class Generator (
    * Generates next bit of the stream
    * @return next bit of the stream
    */
-  private def next(): Boolean = (a3 && a1) || (!a1 && a2)
+  private def next(): Boolean =  {
+    val a = a1
+    val b = a2
+    val c = a3
+    (c && a) || (!a && b)
+  }
 
   def get(): LazyList[Boolean] = {
-//    (1 to n) foreach (_ => {
-//      print(if (next()) 1 else 0)
-//    })
-
     LazyList.fill(n) { next() }
   }
 
