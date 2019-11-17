@@ -29,6 +29,7 @@ class GeffeGUI extends JFXApp {
 
   private def streamTab = new Tab {
     text = "stream"
+    closable = false
     content = new VBox {
       padding = Insets(25)
       children = Seq(
@@ -48,20 +49,28 @@ class GeffeGUI extends JFXApp {
   private def aboutTab = {
     val aboutFile = GeffeGUI.getClass.getResource("/about.md")
     val aboutFileSource = Source.fromFile(aboutFile.toURI)
-    val aboutText = aboutFileSource.getLines.mkString
+    val aboutText = aboutFileSource.getLines.mkString("\n")
     aboutFileSource.close()
-    val aboutNode: Node = new MDFXNode(aboutText)
+    val aboutNode: Node = new MDFXNode(/*aboutText*/"see github repo") {
+      maxWidth(100.0)
+      prefWidth(100)
+    }
 
     new Tab {
       text = "about"
+      closable = false
+
       content = new ScrollPane {
+        padding = Insets(25)
         content = new VBox { children.addAll(aboutNode) }
       }
     }
   }
 
   stage = new PrimaryStage {
-    resizable = false
+    resizable = true
+    width = 650
+    height = 800
     title = "Geffe Generator"
     scene = new Scene {
       content = new TabPane {

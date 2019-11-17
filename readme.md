@@ -26,8 +26,7 @@ Example: `geffe 100 xor 25 xor 25 fib 25`
 
 ## algorithm
 ### how it works?
-Geffe Generator uses three LFSRs connected non-linearly by multiplexer. 
-General equation for this stream is:
+Geffe Generator uses three LFSRs connected non-linearly by multiplexer. General equation for this stream is:
 ```
 k = (a3 AND a1) OR ((NOT a1) AND a2)
 ```   
