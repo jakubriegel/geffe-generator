@@ -2,8 +2,10 @@ package eu.jrie.put.pod.geffe.user
 
 import java.io.{File, PrintWriter}
 
+import com.sandec.mdfx.MDFXNode
 import eu.jrie.put.pod.geffe.generator.Generator
 import eu.jrie.put.pod.geffe.registry.{Fibonacci, LFSR, Xor}
+import javafx.scene.Node
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.geometry.Insets
@@ -11,6 +13,7 @@ import scalafx.scene.Scene
 import scalafx.scene.control._
 import scalafx.scene.layout.{HBox, VBox}
 
+import scala.io.Source
 import scala.util.Random
 
 class GeffeGUI extends JFXApp {
@@ -24,23 +27,46 @@ class GeffeGUI extends JFXApp {
   private val generateToFileCheckbox = new CheckBox("to file")
   private val resultArea = new TextArea() { editable = false; wrapText = true }
 
+  private def streamTab = new Tab {
+    text = "stream"
+    content = new VBox {
+      padding = Insets(25)
+      children = Seq(
+        new HBox(
+          new Label("Length"), lengthField,
+          randomRegistersCheckbox
+        ),
+        lfsrInputs._1, lfsrInputs._2, lfsrInputs._3,
+        new HBox(
+          generateButton, generateToFileCheckbox
+        ),
+        resultArea
+      )
+    }
+  }
+
+  private def aboutTab = {
+    val aboutFile = GeffeGUI.getClass.getResource("/about.md")
+    val aboutFileSource = Source.fromFile(aboutFile.toURI)
+    val aboutText = aboutFileSource.getLines.mkString
+    aboutFileSource.close()
+    val aboutNode: Node = new MDFXNode(aboutText)
+
+    new Tab {
+      text = "about"
+      content = new ScrollPane {
+        content = new VBox { children.addAll(aboutNode) }
+      }
+    }
+  }
+
   stage = new PrimaryStage {
     resizable = false
     title = "Geffe Generator"
     scene = new Scene {
-      content = new VBox {
-        padding = Insets(25)
-        children = Seq(
-          new HBox(
-            new Label("Length"), lengthField,
-            randomRegistersCheckbox
-          ),
-          lfsrInputs._1, lfsrInputs._2, lfsrInputs._3,
-          new HBox(
-            generateButton, generateToFileCheckbox
-          ),
-          resultArea
-        )
+      content = new TabPane {
+        this += streamTab
+        this += aboutTab
       }
     }
   }
@@ -81,8 +107,13 @@ class GeffeGUI extends JFXApp {
       })
   }
 
-  private def printStream(stream: LazyList[Boolean]): Unit = if (generateToFileCheckbox.isSelected) printToFile(stream)
-  else printToResultsArea(stream)
+  private def printStream(stream: LazyList[Boolean]): Unit = if (generateToFileCheckbox.isSelected) {
+    printToFile(stream)
+  }
+  else {
+    printToResultsArea(stream)
+  }
+
 }
 
 object GeffeGUI {
