@@ -46,6 +46,35 @@ class GeffeGUI extends JFXApp {
     }
   }
 
+  private val dataField = new TextField()
+  private val generatedStreamCheckbox = new CheckBox("Generate stream")
+  private val streamFileField = new TextField()
+  private val codeButton = new Button("Code") { onAction = _ => codeAction() }
+
+  private def codeTab = new Tab {
+    text = "code"
+    closable = false
+    content = new VBox {
+      padding = Insets(25)
+      children = Seq(
+        new HBox(
+          new Label("Data"), dataField
+        ),
+        new VBox {
+          padding = Insets(10, 0, 10, 0)
+          children = Seq(
+            new Label("Stream"),
+            generatedStreamCheckbox,
+            streamFileField
+          )
+        },
+        new HBox(
+          codeButton
+        )
+      )
+    }
+  }
+
   private def aboutTab = {
     val aboutFile = GeffeGUI.getClass.getResource("/about.md")
     val aboutFileSource = Source.fromFile(aboutFile.toURI)
@@ -69,12 +98,11 @@ class GeffeGUI extends JFXApp {
 
   stage = new PrimaryStage {
     resizable = true
-    width = 650
-    height = 800
     title = "Geffe Generator"
     scene = new Scene {
       content = new TabPane {
         this += streamTab
+        this += codeTab
         this += aboutTab
       }
     }
@@ -121,6 +149,10 @@ class GeffeGUI extends JFXApp {
   }
   else {
     printToResultsArea(stream)
+  }
+
+  private def codeAction(): Unit = {
+
   }
 
 }
