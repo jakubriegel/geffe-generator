@@ -12,18 +12,14 @@ object Cipher {
 
   type ResultBuilder =  mutable.Builder[Boolean, LazyList[Boolean]]
 
-  def code(stream: LazyList[Boolean], data: LazyList[Byte]): LazyList[Boolean] = code(
-    stream,
-    data.flatMap(byte => 0 to 7 map byteToBit(byte)),
-    LazyList.newBuilder
+  def code(stream: LazyList[Boolean], data: LazyList[Boolean]): LazyList[Boolean] = code(
+    stream, data, LazyList.newBuilder
   ).result()
 
   @tailrec
   private def code(stream: LazyList[Boolean], data: LazyList[Boolean], resultBuilder: ResultBuilder): ResultBuilder =
     if (data.isEmpty) resultBuilder
     else code(stream.tail, data.tail, resultBuilder.addOne(stream.head ^ data.head))
-
-  private def byteToBit(byte: Byte)(n: Int) = if (((byte >> n) & 1) == 1) true else false
 
 //  first tailrec solution - left here because looks fancy
 //  def encode(stream: LazyList[Boolean], data: LazyList[Byte]): List [Boolean]= encode(
