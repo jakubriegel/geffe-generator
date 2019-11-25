@@ -18,8 +18,10 @@ object Cipher {
 
   @tailrec
   private def code(stream: LazyList[Boolean], data: LazyList[Boolean], resultBuilder: ResultBuilder): ResultBuilder =
-    if (data.isEmpty) resultBuilder
-    else code(stream.tail, data.tail, resultBuilder.addOne(stream.head ^ data.head))
+      if ( try { data.isEmpty } catch {
+        case _: NoSuchElementException => true
+      } ) resultBuilder
+      else code(stream.tail, data.tail, resultBuilder.addOne(stream.head ^ data.head))
 
 //  first tailrec solution - left here because looks fancy
 //  def encode(stream: LazyList[Boolean], data: LazyList[Byte]): List [Boolean]= encode(
