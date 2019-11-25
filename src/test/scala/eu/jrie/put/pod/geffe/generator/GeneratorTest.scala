@@ -13,36 +13,20 @@ class GeneratorTest extends FunSuite with BeforeAndAfterEach{
     stream = generator().get()
   }
 
-  test("should pass series test") {
-    // when
-    val result = FIPS.seriesTest(stream)
-
-    // then
-    assert(result)
+  fips("should pass series test") {
+    FIPS.seriesTest(stream)
   }
 
-  test("should pass long series test") {
-    // when
-    val result = FIPS.longSeriesTest(stream)
-
-    // then
-    assert(result)
+  fips("should pass long series test") {
+    FIPS.longSeriesTest(stream)
   }
 
-  test("should pass poker test") {
-    // when
-    val result = FIPS.pokerTest(stream)
-
-    // then
-    assert(result)
+  fips("should pass poker test") {
+    FIPS.pokerTest(stream)
   }
 
-  test("should pass monobit test") {
-    // when
-    val result = FIPS.monobitTest(stream)
-
-    // then
-    assert(result)
+  fips("should pass monobit test") {
+    FIPS.monobitTest(stream)
   }
 
   private def generator() = new Generator(
@@ -59,4 +43,13 @@ class GeneratorTest extends FunSuite with BeforeAndAfterEach{
       List(true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true),
     )
   )
+
+  def fips(name : String)(testAction: => Boolean): Unit = {
+    test(name) {
+      // when
+      val result = testAction
+      // then
+      assert(result, name)
+    }
+  }
 }

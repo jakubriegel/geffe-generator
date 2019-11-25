@@ -7,7 +7,7 @@ class CipherTest extends FunSuite {
   test("should code given data with given stream") {
     // given
     val stream = LazyList.continually { true }
-    val data: LazyList[Byte] = LazyList.fill(1) { 1 }
+    val data = LazyList.fill(1) { true }
 
     // when
     val result = code(stream, data)
