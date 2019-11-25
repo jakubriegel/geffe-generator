@@ -18,9 +18,7 @@ object Cipher {
 
   @tailrec
   private def code(stream: LazyList[Boolean], data: LazyList[Boolean], resultBuilder: ResultBuilder): ResultBuilder =
-      if ( try { data.isEmpty } catch {
-        case _: NoSuchElementException => true
-      } ) resultBuilder
+      if (data.isEmpty) resultBuilder
       else code(stream.tail, data.tail, resultBuilder.addOne(stream.head ^ data.head))
 
 //  first tailrec solution - left here because looks fancy
