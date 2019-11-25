@@ -20,3 +20,10 @@ libraryDependencies += "com.sandec" % "mdfx" % "0.1.6"
 
 // test
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+
+assemblyJarName in assembly := "geffe.jar"
+test in assembly := {}
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}

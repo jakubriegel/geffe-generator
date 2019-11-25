@@ -12,6 +12,8 @@ object GeffeCLI {
       .get()
       .map(b => if(b) 1 else 0)
       .foreach(print)
+
+    println()
   }
 
   private def generateRegistries(args: Array[String]): List[LFSR] = args.length match {
