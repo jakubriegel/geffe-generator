@@ -13,16 +13,24 @@ Features:
 ## build
 ```
 sbt
-sbt:geffe> compile
+sbt:geffe> assembly
 ```
+Generated jar will be available at `target/scala-2.13/geffe.jar`
 
 ## cli
 > CLI was developed only for development purposes and has very limited features
 
-Type: `geffe <NUMBER_BITS_TO_GENERATE> <FIRST_LFSR_TYPE> <FIRST_LFSR_SIZE> <SECOND_LFSR_TYPE> <SECOND_LFSR_SIZE> <THIRD_LFSR_TYPE> <THIRD_LFSR_SIZE>`
+### generate stream
+Type: `java -jar geffe.jar stream <NUMBER_BITS_TO_GENERATE> <FIRST_LFSR_TYPE> <FIRST_LFSR_SIZE> <SECOND_LFSR_TYPE> <SECOND_LFSR_SIZE> <THIRD_LFSR_TYPE> <THIRD_LFSR_SIZE>`
 CLI uses random registers of given size and type
 
-Example: `geffe 100 xor 25 xor 25 fib 25`
+Example: `java -jar geffe.jar stream 100 xor 25 xor 25 fib 25`
+
+### run FIPS tests
+Type: `java -jar geffe.jar test <FILE_WITH_STREAM_TO_TEST>`
+Stream file should consist of `1`s and `0`s. The application will run 4 FIPS tests.
+
+Example: `java -jar geffe.jar test stream.txt`
 
 ## algorithm
 ### how it works?

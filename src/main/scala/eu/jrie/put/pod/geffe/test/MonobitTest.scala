@@ -6,6 +6,7 @@ class MonobitTest(override protected val stream: LazyList[Boolean]) extends Test
 
   override protected def runTest(): Unit = {
     n = stream.count(i => i)
+    log(s"ones number is $n")
   }
 
   override protected def check(): Unit = {

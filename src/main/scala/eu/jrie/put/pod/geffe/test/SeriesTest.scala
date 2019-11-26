@@ -14,6 +14,9 @@ private class SeriesTest(override protected val stream: LazyList[Boolean]) exten
       stream.head, stream.head, 0, stream.tail,
       mutable.Map(1 -> 0, 2 -> 0, 3 -> 0, 4 -> 0, 5 -> 0, 6 -> 0)
     )
+    log(result map {
+      case (k, v) => s"$k - $v"
+    } mkString "\n")
   }
 
   override protected def check(): Unit = {
@@ -43,7 +46,3 @@ private class SeriesTest(override protected val stream: LazyList[Boolean]) exten
     }
   }
 }
-//
-//object SeriesTest {
-//  def apply(stream: LazyList[Boolean]): Boolean = new SeriesTest(stream).test()
-//}

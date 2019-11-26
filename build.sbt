@@ -4,7 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.13.0"
 
-resolvers += "sandec" at "http://sandec.bintray.com/repo"
+resolvers += "sandec" at "https://sandec.bintray.com/repo"
 
 // gui
 libraryDependencies += "org.scalafx" %% "scalafx" % "12.0.2-R18"
