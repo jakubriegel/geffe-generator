@@ -45,16 +45,20 @@ private class SeriesTest(override protected val stream: LazyList[Boolean]) exten
       if (next == previous) longSeriesTest(next, stream.head, n+1, stream.tail, result)
       else {
         if (n >= 1 && n <= 6) {
-          if (next) result(s"1_$n") = result(s"1_$n") + 1
-          else result(s"0_$n") = result(s"0_$n") + 1
+          increment(next, n, result)
           longSeriesTest(next, stream.head, 1, stream.tail, result)
         }
         else {
-          if (next) result(s"1_6") = result(s"1_6") + 1
-          else result(s"0_6") = result(s"0_6") + 1
+          increment(next, 6, result)
           longSeriesTest(next, stream.head, 1, stream.tail, result)
         }
       }
     }
   }
+
+  private def increment(next: Boolean, n: Int, result: mutable.Map[String, Int]): Unit = {
+    if (next) result(s"1_$n") = result(s"1_$n") + 1
+    else result(s"0_$n") = result(s"0_$n") + 1
+  }
+
 }
